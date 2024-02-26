@@ -3,17 +3,6 @@
 #include <iostream>
 #include <initializer_list>
 
-struct TData {
-    uint64_t Day;
-    int Month;
-    uint64_t Year;
-};
-
-struct TValueVector {
-    TData Key;
-    uint64_t Value;
-};
-
 template <typename T>
 class TVector {
 public:
@@ -75,6 +64,26 @@ public:
         return (Size == 0);
     }
 
+    T* begin() 
+    {
+        return Data;
+    }
+
+    T* end()
+    {
+        return Data + Size;
+    }
+
+    const T* begin() const
+    {
+        return Data;
+    }
+
+    const T* end() const
+    {
+        return Data + Size;
+    }
+
     void PushBack(const T & el)
     {
         const size_t MEMORY_SIZE_MULTIPLIER = 2;
@@ -122,6 +131,17 @@ public:
         return Size;
     }
 
+    void ShrinkToFit()
+    {
+        if (Size < Capacity) {
+            Capacity = Size;
+            T* newData = new T[Size];
+            std::copy(begin(), end(), newData);
+            delete[] Data;
+            Data = newData;
+        }
+    }
+
 private:
     void Swap(T & a, T & b) noexcept
     {
@@ -135,3 +155,18 @@ private:
     size_t Capacity = 0;
     T* Data;
 };
+
+struct TData {
+    TVector<char> Data;
+    uint64_t Days;
+};  
+
+struct TSortType {
+    TData Key;
+    uint64_t Value;
+};
+
+// TVector<TSortType> RadixSort(TVector<TSortType> vec, TSortType maxKey)
+// {
+
+// }

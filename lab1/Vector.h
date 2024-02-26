@@ -11,6 +11,24 @@ public:
         Data = new T[1];
     }
 
+    TVector(size_t s)
+    {
+        Capacity = s;
+        Size = s;
+        Data = new T[s];
+    }
+
+    TVector(size_t s, const T & el) 
+    {
+        Capacity = s;
+        Size = s;
+        Data = new T[s];
+
+        for (size_t i = 0; i < s; ++i) {
+            Data[i] = el;
+        }
+    }
+
     TVector(const std::initializer_list<T> & data) noexcept
     {
         Size = data.size();
@@ -155,18 +173,3 @@ private:
     size_t Capacity = 0;
     T* Data;
 };
-
-struct TData {
-    TVector<char> Data;
-    uint64_t Days;
-};  
-
-struct TSortType {
-    TData Key;
-    uint64_t Value;
-};
-
-// TVector<TSortType> RadixSort(TVector<TSortType> vec, TSortType maxKey)
-// {
-
-// }

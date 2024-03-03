@@ -1,28 +1,32 @@
-#include "./Vector.h"
+#include "./Sort.h"
 
 int main()
 {
     char c;
     
     TVector<char> str;
-    TVector<TSortType> vec;
+    TVector<TSortType*> vec;
 
-    uint64_t val;
-
-    while (scanf("%c", &c) == 1) {
+    unsigned long long val;
+    while (c = getchar_unlocked()) {
+        if (c == EOF) {
+            break;
+        }
+        
         if (c == '\n') {
             continue;
         }
 
         if (c == ' ' || c == '\t') {
-            TSortType tmp;
-            tmp.Key.Data = str;
+            TSortType* tmp = new TSortType;
+            tmp->Key.Data = str;
             scanf("%llu", &val);
-            tmp.Value = val;
+            tmp->Value = val;
             vec.PushBack(tmp);
             str.Clear();
             continue;
         }
+        
         str.PushBack(c);
     }
 
@@ -31,11 +35,13 @@ int main()
         int tmpDigit = 0;
         bool d = false, m = false, y = true;
 
-        uint64_t calculateAllDays = 0;
-        for (int j = vec[i].Key.Data.GetSize() - 1; j >= 0; --j) {
-            if (vec[i].Key.Data[j] == '.') {
+        unsigned long long calculateAllDays = 0;
+
+        for (int j = vec[i]->Key.Data.GetSize() - 1; j >= 0; --j) {
+            if (vec[i]->Key.Data[j] == '.') {
                 if (y) {
-                    calculateAllDays += tmpDigit * 365;
+                    const int COUNT_OF_DAYS_IN_YEAR = 365;
+                    calculateAllDays += tmpDigit * COUNT_OF_DAYS_IN_YEAR;
                     tmpDigit = 0;
                     countPow = 1;
                     y = false;
@@ -44,7 +50,8 @@ int main()
                 }
 
                 if (m) {
-                    calculateAllDays += tmpDigit * 30;
+                    const int COUNT_OF_DAYS_IN_MONTH = 30;
+                    calculateAllDays += tmpDigit * COUNT_OF_DAYS_IN_MONTH;
                     tmpDigit = 0;
                     countPow = 1;
                     m = false;
@@ -55,13 +62,12 @@ int main()
                 continue;
             }
 
-            int dig = vec[i].Key.Data[j] - '0';
+            int dig = vec[i]->Key.Data[j] - '0';
             
             tmpDigit += dig * countPow;
             countPow *= 10;
 
-            if (j == 0 && d) {
-                
+            if (j == 0 && d) {             
                 calculateAllDays += tmpDigit;
                 tmpDigit = 0;
                 countPow = 1;
@@ -69,15 +75,16 @@ int main()
                 y = true;
             } 
         }
-        
-        vec[i].Key.Days = calculateAllDays;
-        
+        vec[i]->Key.Days = calculateAllDays;
     }
+
+    RadixSort(vec);
+
+    PrintArrayTSortType(vec);
 
     for (int i = 0; i < vec.GetSize(); ++i) {
-        std::cout << vec[i].Key.Days << std::endl;
+        delete vec[i];
     }
-
 
     return 0;
 }

@@ -45,7 +45,12 @@ struct TNode
         delete[] Key;
     }
 
-    int PosOfDiffBit = -1;
+    /*
+        We need this field in order to number
+        each node of the tree and store it
+        in a ring list on an array
+    */
+    int Id = -1; 
     int Bit;
 
     TKey* Key;
